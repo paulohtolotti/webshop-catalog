@@ -1,6 +1,11 @@
 package com.phtdev.webshopcatalog.entities;
 
+
+
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_category")
@@ -11,7 +16,11 @@ public class Category {
     private Long id;
     private String name;
 
-    // private Set<Product> products = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "tb_category_product",
+        joinColumns = @JoinColumn(name = "category_id"),
+        inverseJoinColumns = @JoinColumn(name = "product_id"))
+     private Set<Product> products = new HashSet<>();
 
     public Category() {
 
@@ -36,5 +45,21 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Category category)) return false;
+
+        return id.equals(category.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
