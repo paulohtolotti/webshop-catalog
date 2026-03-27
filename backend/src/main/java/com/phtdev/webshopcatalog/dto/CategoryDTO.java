@@ -1,4 +1,4 @@
 package com.phtdev.webshopcatalog.dto;
 
-public record CategoryDTO() {
+public record CategoryDTO(Long id, String name) {
 }
