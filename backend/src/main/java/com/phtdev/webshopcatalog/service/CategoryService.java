@@ -3,12 +3,14 @@ package com.phtdev.webshopcatalog.service;
 import com.phtdev.webshopcatalog.dto.CategoryDTO;
 import com.phtdev.webshopcatalog.entities.Category;
 import com.phtdev.webshopcatalog.repository.CategoryRepository;
+import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegistered;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.connection.RedisSubscribedConnectionException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +37,7 @@ public class CategoryService {
     public CategoryDTO findById(Long id) {
         LOGGER.info("Cache miss: querying for id: {}", id);
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Id not found")
+                () -> new ResourceNotRegistered("Category " + id + " not registered")
         );
 
         return new CategoryDTO(category.getId(), category.getName());
