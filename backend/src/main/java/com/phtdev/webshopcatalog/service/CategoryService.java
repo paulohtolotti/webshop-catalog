@@ -25,7 +25,6 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public Page<CategoryDTO> findAll(Pageable pageable) {
         Page<Category> categoriesPage = categoryRepository.findAll(pageable);
-
         return categoriesPage.map(
                 p -> new CategoryDTO(p.getId(), p.getName())
         );
@@ -34,9 +33,9 @@ public class CategoryService {
     @Transactional(readOnly = true)
     @Cacheable
     public CategoryDTO findById(Long id) {
-        LOGGER.info("Cache miss: consultando banco para o id: {}", id);
+        LOGGER.info("Cache miss: querying for id: {}", id);
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("qqq por enquanto")
+                () -> new RuntimeException("Id not found")
         );
 
         return new CategoryDTO(category.getId(), category.getName());
@@ -45,6 +44,6 @@ public class CategoryService {
 
     @CacheEvict
     public void invalidate(Long id) {
-        LOGGER.info("Cache invalidado para {}", id);
+        LOGGER.info("Invalidated cache for id {}", id);
     }
 }
