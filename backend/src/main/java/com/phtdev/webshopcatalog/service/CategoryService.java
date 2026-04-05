@@ -3,11 +3,13 @@ package com.phtdev.webshopcatalog.service;
 import com.phtdev.webshopcatalog.dto.CategoryDTO;
 import com.phtdev.webshopcatalog.entities.Category;
 import com.phtdev.webshopcatalog.repository.CategoryRepository;
+import com.phtdev.webshopcatalog.service.exceptions.ResourceDuplicatedException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegistered;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.connection.RedisSubscribedConnectionException;
@@ -43,6 +45,25 @@ public class CategoryService {
         return new CategoryDTO(category.getId(), category.getName());
     }
 
+    @Transactional
+    public CategoryDTO insert(CategoryDTO dto) {
+        Category entity = new Category();
+
+//        entity = categoryRepository.existsByName(dto.name()).orElseThrow(
+//                () ->  new ResourceDuplicatedException(dto.name()  + " already registered")
+//        );
+        boolean entityPresent = categoryRepository.existsByName(dto.name()).isPresent();
+
+        if(entityPresent) {
+            LOGGER.info("{} already registered. Throwing exception", dto.name());
+            throw new ResourceDuplicatedException(dto.name()  + " already registered");
+        }
+
+        LOGGER.info("{} not registered. Saving it now.",dto.name());
+        entity.setName(dto.name().toLowerCase());
+        entity = categoryRepository.save(entity);
+        return new CategoryDTO(entity.getId(), entity.getName());
+    }
 
     @CacheEvict
     public void invalidate(Long id) {

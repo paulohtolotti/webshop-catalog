@@ -1,6 +1,7 @@
 package com.phtdev.webshopcatalog.resources.handlers;
 
 import com.phtdev.webshopcatalog.dto.BaseErrorDTO;
+import com.phtdev.webshopcatalog.service.exceptions.ResourceDuplicatedException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegistered;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,14 @@ public class ResourceExceptionHandler {
         String path = http.getRequestURI();
         BaseErrorDTO errorDTO = new BaseErrorDTO(exc.getMessage(), status.value(), path, Instant.now());
 
+        return ResponseEntity.status(status).body(errorDTO);
+    }
+
+    @ExceptionHandler(ResourceDuplicatedException.class)
+    public ResponseEntity<BaseErrorDTO> resourceDuplicatedException(HttpServletRequest http, ResourceDuplicatedException exc) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String path = http.getRequestURI();
+        BaseErrorDTO errorDTO = new BaseErrorDTO(exc.getMessage(), status.value(), path, Instant.now());
         return ResponseEntity.status(status).body(errorDTO);
     }
 }
