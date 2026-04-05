@@ -5,6 +5,7 @@ import com.phtdev.webshopcatalog.entities.Category;
 import com.phtdev.webshopcatalog.repository.CategoryRepository;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceDuplicatedException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegistered;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -49,9 +50,6 @@ public class CategoryService {
     public CategoryDTO insert(CategoryDTO dto) {
         Category entity = new Category();
 
-//        entity = categoryRepository.existsByName(dto.name()).orElseThrow(
-//                () ->  new ResourceDuplicatedException(dto.name()  + " already registered")
-//        );
         boolean entityPresent = categoryRepository.existsByName(dto.name()).isPresent();
 
         if(entityPresent) {
@@ -63,6 +61,23 @@ public class CategoryService {
         entity.setName(dto.name().toLowerCase());
         entity = categoryRepository.save(entity);
         return new CategoryDTO(entity.getId(), entity.getName());
+    }
+
+    @Transactional
+    public CategoryDTO update(Long id, CategoryDTO dto) {
+
+        try {
+            Category entity = categoryRepository.getReferenceById(id);
+
+            entity.setName(dto.name());
+            entity = categoryRepository.save(entity);
+
+            return new CategoryDTO(entity.getId(), entity.getName());
+        } catch(EntityNotFoundException err) {
+            throw new ResourceNotRegistered("Cateogry " + id + " not registered");
+        }
+
+
     }
 
     @CacheEvict

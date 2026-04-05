@@ -1,4 +1,4 @@
 package com.phtdev.webshopcatalog.dto;
 
-public class FieldErrorDTO {
+public record FieldErrorDTO(String field, String errorMessage) {
 }
