@@ -8,7 +8,7 @@ catálogo para controle de produtos, com separação para usuários e administra
 Aplicação desenvolvida usando padrão monorepo.
 ****
 ## Modelo de domínio
-![img.png](src/main/resources/static/img.png)
+![img.png](backend/src/main/resources/static/img.png)
 ****
 ## Padrões e conceitos utilizados
 - Padrão cache aside com Redis: Cache MISS realiza uma consulta ao banco e Cache HIT devolve o conteúdo em cache
