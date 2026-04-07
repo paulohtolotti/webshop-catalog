@@ -1,26 +1,26 @@
 package com.phtdev.webshopcatalog.resources.handlers;
 
 import com.phtdev.webshopcatalog.dto.BaseErrorDTO;
-import com.phtdev.webshopcatalog.dto.FieldErrorDTO;
 import com.phtdev.webshopcatalog.dto.ValidationErrorDTO;
+import com.phtdev.webshopcatalog.service.exceptions.DatabaseViolationOccuredException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceDuplicatedException;
-import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegistered;
+import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegisteredException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.net.URI;
 import java.time.Instant;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
-    @ExceptionHandler(ResourceNotRegistered.class)
+    @ExceptionHandler(ResourceNotRegisteredException.class)
     public ResponseEntity<BaseErrorDTO> resourceNotRegisteredException(HttpServletRequest http,
-                                                                       ResourceNotRegistered exc) {
+                                                                       ResourceNotRegisteredException exc) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String path = http.getRequestURI();
         BaseErrorDTO errorDTO = new BaseErrorDTO(exc.getMessage(), status.value(), path, Instant.now());
@@ -47,7 +47,15 @@ public class ResourceExceptionHandler {
 
         exc.getBindingResult().getFieldErrors().forEach(e -> error.addFieldError(e.getField(),
                 e.getDefaultMessage()));
-
         return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(DatabaseViolationOccuredException.class)
+    public ResponseEntity<BaseErrorDTO> DatabaseViolationOccuredException(HttpServletRequest http,
+                                                                          DatabaseViolationOccuredException exc) {
+        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        BaseErrorDTO errorDTO = new BaseErrorDTO(exc.getMessage(), status.value(), http.getRequestURI(), Instant.now());
+
+        return ResponseEntity.status(status).body(errorDTO);
     }
 }
