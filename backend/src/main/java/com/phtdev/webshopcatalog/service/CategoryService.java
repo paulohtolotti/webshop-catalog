@@ -4,8 +4,9 @@ import com.phtdev.webshopcatalog.dto.CategoryDTO;
 import com.phtdev.webshopcatalog.entities.Category;
 import com.phtdev.webshopcatalog.repository.CategoryRepository;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceDuplicatedException;
-import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegistered;
+import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegisteredException;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,8 +14,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.connection.RedisSubscribedConnectionException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -40,7 +41,7 @@ public class CategoryService {
     public CategoryDTO findById(Long id) {
         LOGGER.info("Cache miss: querying for id: {}", id);
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> new ResourceNotRegistered("Category " + id + " not registered")
+                () -> new ResourceNotRegisteredException("Category " + id + " not registered")
         );
 
         return new CategoryDTO(category.getId(), category.getName());
@@ -74,10 +75,25 @@ public class CategoryService {
 
             return new CategoryDTO(entity.getId(), entity.getName());
         } catch(EntityNotFoundException err) {
-            throw new ResourceNotRegistered("Cateogry " + id + " not registered");
+            throw new ResourceNotRegisteredException("Category " + id + " not registered");
         }
 
 
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        LOGGER.info("Deleting id {}", id);
+        if(!categoryRepository.existsById(id)) {
+            LOGGER.info("{} id not registered, throwing exception", id);
+            throw new ResourceNotRegisteredException("Category " + id + " not registered");
+        }
+
+        try {
+            categoryRepository.deleteById(id);
+        } catch(DataIntegrityViolationException err) {
+            throw new DataIntegrityViolationException("Integrity violation for id " + id);
+        }
     }
 
     @CacheEvict
