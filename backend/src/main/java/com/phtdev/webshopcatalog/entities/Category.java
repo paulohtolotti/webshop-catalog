@@ -17,10 +17,7 @@ public class Category {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany
-    @JoinTable(name = "tb_category_product",
-        joinColumns = @JoinColumn(name = "category_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @ManyToMany(mappedBy = "categories")
      private Set<Product> products = new HashSet<>();
 
     public Category() {
