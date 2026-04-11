@@ -51,7 +51,7 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(DatabaseViolationOccuredException.class)
-    public ResponseEntity<BaseErrorDTO> DatabaseViolationOccuredException(HttpServletRequest http,
+    public ResponseEntity<BaseErrorDTO> databaseViolationOccuredException(HttpServletRequest http,
                                                                           DatabaseViolationOccuredException exc) {
         HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         BaseErrorDTO errorDTO = new BaseErrorDTO(exc.getMessage(), status.value(), http.getRequestURI(), Instant.now());

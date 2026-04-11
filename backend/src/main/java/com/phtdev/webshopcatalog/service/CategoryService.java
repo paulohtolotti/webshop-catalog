@@ -3,6 +3,7 @@ package com.phtdev.webshopcatalog.service;
 import com.phtdev.webshopcatalog.dto.CategoryDTO;
 import com.phtdev.webshopcatalog.entities.Category;
 import com.phtdev.webshopcatalog.repository.CategoryRepository;
+import com.phtdev.webshopcatalog.service.exceptions.DatabaseViolationOccuredException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceDuplicatedException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegisteredException;
 import jakarta.persistence.EntityNotFoundException;
@@ -72,7 +73,7 @@ public class CategoryService {
 
             entity.setName(dto.name());
             entity = categoryRepository.save(entity);
-
+            LOGGER.info("Updated category {}", id);
             return new CategoryDTO(entity.getId(), entity.getName());
         } catch(EntityNotFoundException err) {
             throw new ResourceNotRegisteredException("Category " + id + " not registered");
@@ -92,7 +93,7 @@ public class CategoryService {
         try {
             categoryRepository.deleteById(id);
         } catch(DataIntegrityViolationException err) {
-            throw new DataIntegrityViolationException("Integrity violation for id " + id);
+            throw new DatabaseViolationOccuredException("Integrity violation for id " + id);
         }
     }
 
