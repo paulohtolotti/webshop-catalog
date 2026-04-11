@@ -1,8 +1,8 @@
-INSERT INTO tb_category (name) VALUES ('books');
-INSERT INTO tb_category (name) VALUES  ('comics');
-INSERT INTO tb_category (name) VALUES  ('hardware');
-INSERT INTO tb_category (name) VALUES  ('software');
-INSERT INTO tb_category (name) VALUES  ('cellphones');
+INSERT INTO tb_category (name, created_at) VALUES ('books', NOW());
+INSERT INTO tb_category (name,created_at) VALUES  ('comics', NOW());
+INSERT INTO tb_category (name, created_at) VALUES  ('hardware', NOW());
+INSERT INTO tb_category (name, created_at) VALUES  ('software', NOW());
+INSERT INTO tb_category (name, created_at) VALUES  ('cellphones', NOW());
 
 
 INSERT INTO tb_product (name, description, price, img_url) VALUES ('A Storm of Swords', 'A song of ice and fire', 65.70, 'https://rrmartin.com/storm');
