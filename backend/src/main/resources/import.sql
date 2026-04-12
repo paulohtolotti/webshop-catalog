@@ -3,6 +3,7 @@ INSERT INTO tb_category (name,created_at) VALUES  ('comics', NOW());
 INSERT INTO tb_category (name, created_at) VALUES  ('hardware', NOW());
 INSERT INTO tb_category (name, created_at) VALUES  ('software', NOW());
 INSERT INTO tb_category (name, created_at) VALUES  ('cellphones', NOW());
+INSERT INTO tb_category (name, created_at) VALUES  ('portable consoles', NOW());
 
 
 INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('A Storm of Swords', 'A song of ice and fire', 65.70, 'https://rrmartin.com/storm', TIMESTAMP WITH TIME ZONE '2026-04-01T10:07:55Z');
@@ -14,6 +15,8 @@ INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('
 INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('SSD 1TB NVMe', 'High-speed solid state drive for gaming and work', 479.00, 'https://hardware.example.com/ssd-1tb', TIMESTAMP WITH TIME ZONE '2023-04-01T09:07:55Z');
 INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('IntelliJ IDEA Ultimate', 'The leading Java and Kotlin IDE', 199.90, 'https://software.example.com/intellij', TIMESTAMP WITH TIME ZONE '2026-04-01T09:07:25Z');
 INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('Adobe Photoshop', 'Professional photo editing software', 129.90, 'https://software.example.com/photoshop', TIMESTAMP WITH TIME ZONE '2026-04-01T09:21:55Z');
+INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('Nintendo DS', 'Nintendo DS Lite gray - new', 850.90, 'https://www.nintendo.com/eu/media/images/03_teaser_module_1_square/systems_2/nintendo_ds_3/TM_DS_Lite_TouchScreen.png', TIMESTAMP WITH TIME ZONE '2026-04-01T09:21:55Z');
+
 
 INSERT INTO tb_category_product (product_id, category_id) VALUES (1, 1);  -- A Storm of Swords → Books
 INSERT INTO tb_category_product (product_id, category_id) VALUES (2, 1);  -- Clean Code → Books
@@ -23,6 +26,8 @@ INSERT INTO tb_category_product (product_id, category_id) VALUES (5, 2);  -- Wat
 INSERT INTO tb_category_product (product_id, category_id) VALUES (6, 3);  -- Mechanical Keyboard → Hardware
 INSERT INTO tb_category_product (product_id, category_id) VALUES (7, 3);  -- SSD 1TB → Hardware
 INSERT INTO tb_category_product (product_id, category_id) VALUES (8, 4);  -- IntelliJ IDEA → Software
+INSERT INTO tb_category_product (product_id, category_id) VALUES (9, 3);  -- Nintendo DS→ Hardware
+INSERT INTO tb_category_product (product_id, category_id) VALUES (9, 6);  -- Nintendo DS → Portable console
 
 
 CREATE INDEX idx_cat_id ON tb_category (id);
