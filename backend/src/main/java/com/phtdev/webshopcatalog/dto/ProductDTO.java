@@ -1,6 +1,5 @@
 package com.phtdev.webshopcatalog.dto;
 
-import com.phtdev.webshopcatalog.entities.Category;
 import com.phtdev.webshopcatalog.entities.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
