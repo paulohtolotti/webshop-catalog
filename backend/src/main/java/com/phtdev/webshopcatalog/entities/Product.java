@@ -3,24 +3,33 @@ package com.phtdev.webshopcatalog.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "tb_product")
 public class Product {
-    //    private Double price; IGUAL AO DO CURSO
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
-    @Column(columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
+
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private BigDecimal price;
+
     private String imgUrl;
 
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant createdAt;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant updatedAt;
 
     @ManyToMany
     @JoinTable(name = "tb_category_product",
@@ -82,6 +91,28 @@ public class Product {
 
     public void addCategory(Category category) {
         categories.add(category);
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = Instant.now();
     }
 
     @Override
