@@ -32,9 +32,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public Page<CategoryDTO> findAll(Pageable pageable) {
         Page<Category> categoriesPage = categoryRepository.findAll(pageable);
-        return categoriesPage.map(
-                p -> new CategoryDTO(p.getId(), p.getName())
-        );
+        return categoriesPage.map(CategoryDTO::create);
     }
 
     @Transactional(readOnly = true)
@@ -45,7 +43,7 @@ public class CategoryService {
                 () -> new ResourceNotRegisteredException("Category " + id + " not registered")
         );
 
-        return new CategoryDTO(category.getId(), category.getName());
+        return CategoryDTO.create(category);
     }
 
     @Transactional
@@ -62,7 +60,7 @@ public class CategoryService {
         LOGGER.info("{} not registered. Saving it now.",dto.name());
         entity.setName(dto.name().toLowerCase());
         entity = categoryRepository.save(entity);
-        return new CategoryDTO(entity.getId(), entity.getName());
+        return  CategoryDTO.create(entity);
     }
 
     @Transactional
@@ -74,7 +72,7 @@ public class CategoryService {
             entity.setName(dto.name());
             entity = categoryRepository.save(entity);
             LOGGER.info("Updated category {}", id);
-            return new CategoryDTO(entity.getId(), entity.getName());
+            return CategoryDTO.create(entity);
         } catch(EntityNotFoundException err) {
             throw new ResourceNotRegisteredException("Category " + id + " not registered");
         }
