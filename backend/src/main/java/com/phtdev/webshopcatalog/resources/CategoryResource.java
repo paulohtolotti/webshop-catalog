@@ -42,8 +42,8 @@ public class CategoryResource {
         logger.info("Creating a new entity");
         CategoryDTO dtoWithId = categoryService.insert(dto);
 
-        // URI do recurso criado
-        URI uri = URI.create("/categories/" + dto.id());
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.id()).toUri();
         return ResponseEntity.created(uri).body(dtoWithId);
     }
 
