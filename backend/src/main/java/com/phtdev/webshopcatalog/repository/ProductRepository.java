@@ -1,11 +1,12 @@
 package com.phtdev.webshopcatalog.repository;
 
-import com.phtdev.webshopcatalog.dto.ProductDTO;
 import com.phtdev.webshopcatalog.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -18,4 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      */
     @Query(value = "SELECT obj FROM Product obj JOIN FETCH obj.categories")
     public Page<Product> findAllWithCategories(Pageable pageable);
+
+    @Query(value = "SELECT obj FROM Product obj WHERE UPPER(obj.name) = UPPER(:name)")
+    Optional<Product> existsByName(String name);
 }

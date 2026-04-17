@@ -7,7 +7,6 @@ import com.phtdev.webshopcatalog.service.exceptions.DatabaseViolationOccuredExce
 import com.phtdev.webshopcatalog.service.exceptions.ResourceDuplicatedException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegisteredException;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
