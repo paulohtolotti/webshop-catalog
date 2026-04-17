@@ -1,5 +1,6 @@
 package com.phtdev.webshopcatalog.entities;
 
+import com.phtdev.webshopcatalog.dto.ProductDTO;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -49,6 +50,15 @@ public class Product {
         this.imgUrl = imgUrl;
     }
 
+    public Product(ProductDTO dto) {
+        id = null;
+        name = dto.name();
+        description = dto.description();
+        price = dto.price();
+        imgUrl = dto.imgUrl();
+
+        dto.categories().forEach(c -> addCategory(new Category(c.id(), c.name())));
+    }
     public Long getId() {
         return id;
     }
@@ -103,6 +113,10 @@ public class Product {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public void clear() {
+        categories.clear();
     }
 
     @PrePersist
