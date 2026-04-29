@@ -16,6 +16,7 @@ INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('
 INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('IntelliJ IDEA Ultimate', 'The leading Java and Kotlin IDE', 199.90, 'https://software.example.com/intellij', TIMESTAMP WITH TIME ZONE '2026-04-01T09:07:25Z');
 INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('Adobe Photoshop', 'Professional photo editing software', 129.90, 'https://software.example.com/photoshop', TIMESTAMP WITH TIME ZONE '2026-04-01T09:21:55Z');
 INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('Nintendo DS', 'Nintendo DS Lite gray - new', 850.90, 'https://www.nintendo.com/eu/media/images/03_teaser_module_1_square/systems_2/nintendo_ds_3/TM_DS_Lite_TouchScreen.png', TIMESTAMP WITH TIME ZONE '2026-04-01T09:21:55Z');
+INSERT INTO tb_product (name, description, price, img_url, created_at) VALUES ('Nintendo 3DS', 'Nintendo 3DS Red', 1850.90, 'https://www.nintendo.com/eu/media/images/03_teaser_module_1_square/systems_2/nintendo_ds_3/TM_DS_Lite_TouchScreen.png', TIMESTAMP WITH TIME ZONE '2026-04-01T09:21:55Z');
 
 
 INSERT INTO tb_category_product (product_id, category_id) VALUES (1, 1);  -- A Storm of Swords → Books
