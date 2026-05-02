@@ -6,13 +6,10 @@ import com.phtdev.webshopcatalog.entities.Product;
 
 import java.math.BigDecimal;
 
-public class ProductFactory {
+public class Factory {
 
-    public static Product createEmpty() {
-        return new Product();
-    }
 
-    public static Product create() {
+    public static Product createProduct() {
        Product product = new Product(null, "Swamp thing",
                "Allan's Moore revamp", new BigDecimal("25.00"), null);
 
@@ -21,8 +18,8 @@ public class ProductFactory {
        return product;
     }
 
-    public static ProductDTO createDto() {
-        Product product = create();
+    public static ProductDTO createProductDto() {
+        Product product = createProduct();
         return ProductDTO.create(product);
     }
 }
