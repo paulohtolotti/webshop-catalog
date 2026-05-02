@@ -17,17 +17,16 @@ public class ProductRepositoryTests {
     @Autowired
     private ProductRepository repository;
     private long existingID;
+    private long nonExistingID;
     private String name;
+    private long totalProducts;
 
     @BeforeEach
     void setUp() {
         existingID = 11L;
         name = "WatcHmeN";
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-
+        totalProducts = 11;
+        nonExistingID = 98000;
     }
 
     @Test
@@ -68,7 +67,7 @@ public class ProductRepositoryTests {
 
     @Test
     public void saveShouldCreateAutoIncrementedID() {
-        long expectedId = 12;
+        long expectedId = totalProducts + 1;
         Product entity = Factory.createProduct();
 
         entity = repository.save(entity);
@@ -76,4 +75,21 @@ public class ProductRepositoryTests {
         Assertions.assertEquals(expectedId, entity.getId());
     }
 
+    @Test
+    public void findByIdShouldReturnWhenExistingId() {
+        // Arrange + act
+        Optional<Product> entity = repository.findById(existingID);
+
+        // Assert
+        Assertions.assertTrue(entity.isPresent());
+    }
+
+    @Test
+    public void findByIdShouldReturnEmptyOptionalWhenIdInexistent() {
+        // Arrange + act
+        Optional<Product> entity = repository.findById(nonExistingID);
+
+        // Assert
+        Assertions.assertTrue(entity.isEmpty());
+    }
 }
