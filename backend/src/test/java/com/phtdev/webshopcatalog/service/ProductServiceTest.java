@@ -1,19 +1,18 @@
 package com.phtdev.webshopcatalog.service;
 
 import com.phtdev.webshopcatalog.repository.ProductRepository;
+import com.phtdev.webshopcatalog.service.exceptions.DatabaseViolationOccuredException;
 import com.phtdev.webshopcatalog.service.exceptions.ResourceNotRegisteredException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.dao.DataIntegrityViolationException;
+
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -26,12 +25,13 @@ public class ProductServiceTest {
 
     private long validId;
     private long invalidId;
+    private long dependentId;
 
     @BeforeEach
     void setUp() {
         validId = 1L;
         invalidId = 150L;
-
+        dependentId = 5L;
         //Caso usasse o Spring Extensions com @MockitoBean MockitoAnnotations.openMocks(this);
     }
 
@@ -43,6 +43,7 @@ public class ProductServiceTest {
 
         // Act + Assert
         Assertions.assertDoesNotThrow(() ->  service.delete(validId));
+
         // Assert se o método mockado do Mockito foi usado
         Mockito.verify(repository, Mockito.times(1)).existsById(validId);
         Mockito.verify(repository, Mockito.times(1)).deleteById(validId);
@@ -57,7 +58,22 @@ public class ProductServiceTest {
         Assertions.assertThrows(ResourceNotRegisteredException.class,
                 () -> service.delete(invalidId)
         );
+
         Mockito.verify(repository, Mockito.times(1)).existsById(invalidId);
         Mockito.verify(repository, Mockito.never()).deleteById(invalidId);
+    }
+
+    @Test
+    public void deleteShouldThrowExceptionWhenDependentId() {
+        // Arrange
+        Mockito.when(repository.existsById(dependentId)).thenReturn(true);
+        Mockito.doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
+
+        // Act + Assert
+        Assertions.assertThrows(DatabaseViolationOccuredException.class,
+                () -> service.delete(dependentId)
+        );
+        Mockito.verify(repository, Mockito.times(1)).existsById(dependentId);
+        Mockito.verify(repository, Mockito.times(1)).deleteById(dependentId);
     }
 }
