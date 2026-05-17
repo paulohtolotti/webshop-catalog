@@ -22,4 +22,8 @@ public class Factory {
         Product product = createProduct();
         return ProductDTO.create(product);
     }
+
+    public static Category createCategory() {
+        return new Category(1L, "Cellphones");
+    }
 }

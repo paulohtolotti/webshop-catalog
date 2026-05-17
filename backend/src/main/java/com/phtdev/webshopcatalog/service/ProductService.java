@@ -71,6 +71,7 @@ public class ProductService {
 
        Product entity = productRepository.getReferenceById(id);
        copyDtoToEntity(entity, dto);
+       entity = productRepository.save(entity);
        return ProductDTO.create(entity);
     }
 
