@@ -10,7 +10,7 @@ public class Factory {
 
 
     public static Product createProduct() {
-       Product product = new Product(null, "Swamp thing",
+       Product product = new Product(20L, "Swamp thing",
                "Allan's Moore revamp", new BigDecimal("25.00"), null);
 
         product.addCategory(new Category(1L, "books"));
